@@ -72,10 +72,11 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 399924630;
-			PBXWorkspaceStateSaveDate = 399924630;
+			PBXPerProjectTemplateStateSaveDate = 407061396;
+			PBXWorkspaceStateSaveDate = 407061396;
 		};
 		perUserProjectItems = {
+			D13A2AA6184343E000E722A3 /* PBXTextBookmark */ = D13A2AA6184343E000E722A3 /* PBXTextBookmark */;
 			D162BA0817D641ED003EC516 /* PBXTextBookmark */ = D162BA0817D641ED003EC516 /* PBXTextBookmark */;
 			D162BA0917D641ED003EC516 /* PBXTextBookmark */ = D162BA0917D641ED003EC516 /* PBXTextBookmark */;
 			D162BB8817D65686003EC516 /* PBXTextBookmark */ = D162BB8817D65686003EC516 /* PBXTextBookmark */;
@@ -87,7 +88,6 @@
 			D1B0E3D017D63BB4007B8EDC /* PBXTextBookmark */ = D1B0E3D017D63BB4007B8EDC /* PBXTextBookmark */;
 			D1CA0DDE17D65DCD00CF1F18 /* PBXTextBookmark */ = D1CA0DDE17D65DCD00CF1F18 /* PBXTextBookmark */;
 			D1CA0DDF17D65DCD00CF1F18 /* PBXTextBookmark */ = D1CA0DDF17D65DCD00CF1F18 /* PBXTextBookmark */;
-			D1CA0DE017D65DCD00CF1F18 /* PBXTextBookmark */ = D1CA0DE017D65DCD00CF1F18 /* PBXTextBookmark */;
 			D1CA0DE317D65DCD00CF1F18 /* PBXTextBookmark */ = D1CA0DE317D65DCD00CF1F18 /* PBXTextBookmark */;
 		};
 		sourceControlManager = D1B0E2D017D62AEB007B8EDC /* Source Control */;
@@ -148,6 +148,16 @@
 			sepNavVisRange = "{0, 786}";
 			sepNavWindowFrame = "{{452, 121}, {934, 738}}";
 		};
+	};
+	D13A2AA6184343E000E722A3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = D162BB9417D6575B003EC516 /* dice.c */;
+		name = "dice.c: 8";
+		rLen = 20;
+		rLoc = 139;
+		rType = 0;
+		vrLen = 387;
+		vrLoc = 0;
 	};
 	D162B9B017D63FCC003EC516 /* jaro_winkler.h */ = {
 		uiCtxt = {
@@ -213,7 +223,7 @@
 	};
 	D162BB9417D6575B003EC516 /* dice.c */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {600, 793}}";
+			sepNavIntBoundsRect = "{{0, 0}, {775, 767}}";
 			sepNavSelRange = "{139, 20}";
 			sepNavVisRange = "{0, 387}";
 			sepNavWindowFrame = "{{484, 120}, {952, 745}}";
@@ -396,16 +406,6 @@
 		rLoc = 54;
 		rType = 0;
 		vrLen = 103;
-		vrLoc = 0;
-	};
-	D1CA0DE017D65DCD00CF1F18 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = D162BB9417D6575B003EC516 /* dice.c */;
-		name = "dice.c: 3";
-		rLen = 17;
-		rLoc = 86;
-		rType = 0;
-		vrLen = 387;
 		vrLoc = 0;
 	};
 	D1CA0DE317D65DCD00CF1F18 /* PBXTextBookmark */ = {
