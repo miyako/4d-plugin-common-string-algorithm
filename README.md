@@ -1,7 +1,7 @@
 4d-plugin-common-string-algorithm
 =================================
 
-Suite of classic hash functions: Dice's coefficient, Levenshtein distance, LCS and Jaro Winkler.
+Suite of classic hash functions: Dice's coefficient, Levenshtein distance, LCS and Jaro Winkler
 
 ### Platform
 
