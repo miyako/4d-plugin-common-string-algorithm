@@ -1,0 +1,36 @@
+{
+    "name": "Common String Algorithm",
+    "id": 20000,
+    "commands": [
+                 {
+                 "theme": "Dice's coefficient",
+                 "syntax": "Coefficient(&T;&T):8",
+                 "threadSafe": true
+                 },
+                 {
+                 "theme": "Levenshtein distance",
+                 "syntax": "Levenshtein(&T;&T):L",
+                 "threadSafe": true
+                 },
+                 {
+                 "theme": "LCS",
+                 "syntax": "Longest common subsequence(&T;&T):T",
+                 "threadSafe": true
+                 },
+                 {
+                 "theme": "LCS",
+                 "syntax": "Longest common substring(&T;&T):T",
+                 "threadSafe": true
+                 },
+                 {
+                 "theme": "Jaro Winkler",
+                 "syntax": "Jaro winkler(&T;&T):8",
+                 "threadSafe": true
+                 },
+                 {
+                 "theme": "Jaro Winkler",
+                 "syntax": "Jaro(&T;&T):8",
+                 "threadSafe": true
+                 }
+                 ]
+}
