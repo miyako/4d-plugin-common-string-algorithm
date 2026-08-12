@@ -101,7 +101,19 @@ void LongestCommonSubsequence(C_TEXT& Param1, C_TEXT& Param2, C_TEXT& returnValu
 	
 	std::vector<char> result;
 	LCS::findOne(( char *)str1.c_str(), str1.size(), ( char *)str2.c_str(), str2.size(), result);
-	returnValue.setUTF8String((const uint8_t *)&result.front(), result.size());
+	// result can legitimately be empty when str1 and str2 share no character
+	// at all (e.g. "abc" vs "xyz") - result.front() on an empty vector is
+	// undefined behavior. setUTF8String with a length of 0 is used instead
+	// of taking &result.front() in that case, matching the "empty text"
+	// result a caller would reasonably expect for "no common subsequence".
+	if (result.empty())
+	{
+		returnValue.setUTF8String((const uint8_t *)"", 0);
+	}
+	else
+	{
+		returnValue.setUTF8String((const uint8_t *)&result.front(), result.size());
+	}
 }	
 
 int LongestCommonSubstring(C_TEXT& Param1, C_TEXT& Param2, C_TEXT& returnValue)
