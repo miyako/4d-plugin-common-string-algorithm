@@ -1,0 +1,10 @@
+{
+	"methods": {
+		"Method1": {
+			"timeStamp": "2026-08-12T12:08:45Z",
+			"attributes": {
+				"preemptive": "capable"
+			}
+		}
+	}
+}
