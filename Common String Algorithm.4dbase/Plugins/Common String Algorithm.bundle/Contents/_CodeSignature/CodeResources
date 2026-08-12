@@ -109,6 +109,10 @@
 		<data>
 		UbZYnK1QdI2HA5cO0/aNT2a+ucQ=
 		</data>
+		<key>Resources/manifest.json</key>
+		<data>
+		VFXrXJtm+WkM3cpD+z3ltEmJd1A=
+		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
@@ -296,39 +300,11 @@
 			7t2nF9u/4W05GOd8UQ7QAt/PFge16k3ydWYX/6ElmJk=
 			</data>
 		</dict>
-		<key>Windows/Common String Algorithm.4DX</key>
+		<key>Resources/manifest.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			DtosPyvHbnXOhIvinbUMTQLgr5qP1XoL/k7iNsijvFc=
-			</data>
-		</dict>
-		<key>Windows/Common String Algorithm.exp</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			jnM5rwwZB+tc1a1IPE9TYhnqD4TXc/uMnzp7x29VVJY=
-			</data>
-		</dict>
-		<key>Windows/Common String Algorithm.iobj</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			QIuBkXZLNK/krEG+40IutJiQbU8LKuEzS2TixLkoBLc=
-			</data>
-		</dict>
-		<key>Windows/Common String Algorithm.ipdb</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			54oR0+tEVOBk5LdiRuVSeOgcTEGShzrcJ17eQYTvilE=
-			</data>
-		</dict>
-		<key>Windows/Common String Algorithm.lib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			Mi4GSFgZeBOixdI9SfP+fm/r4BpsIEKny2szm3rSGHw=
+			gkU4HtH9hyRMZfkvofhFiGw2rC1K7WIahK3v4DUgS7k=
 			</data>
 		</dict>
 		<key>Windows64/Common String Algorithm.4DX</key>
@@ -337,43 +313,6 @@
 			<data>
 			JulkiJGdEztZwvUva/8RN14EdmvF6FC+Ojk0gmZzRFk=
 			</data>
-		</dict>
-		<key>Windows64/Common String Algorithm.exp</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			onnFD4H58zcg9esZQWlt49HpmQgM045+M5m1pGkq5Jg=
-			</data>
-		</dict>
-		<key>Windows64/Common String Algorithm.iobj</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			Vo5hKe1k6CODoY0bUQtC/h8G+IiOz0SvbwsbGC/zUzM=
-			</data>
-		</dict>
-		<key>Windows64/Common String Algorithm.ipdb</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			ft1UlShyVLKO6VETgvyuJ4YKiVcz48dPpWxPDQfC/dc=
-			</data>
-		</dict>
-		<key>Windows64/Common String Algorithm.lib</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			311ms/Jtr6kFots3y+vjMoP4iiEraI0qFHXpS8rSzCk=
-			</data>
-		</dict>
-		<key>manifest.json</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			sUXqcRROLI7H/xge47fctmkkCyI=
-			</data>
-			<key>requirement</key>
-			<string>identifier manifest and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Y69CWUC25B</string>
 		</dict>
 	</dict>
 	<key>rules</key>
