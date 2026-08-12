@@ -84,7 +84,14 @@ void Coefficient(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    returnValue.setDoubleValue(dice_coefficient(Param1, Param2));
+    try
+    {
+        returnValue.setDoubleValue(dice_coefficient(Param1, Param2));
+    }
+    catch(...)
+    {
+        returnValue.setDoubleValue(0.0);
+    }
     returnValue.setReturn(pResult);
 }
 
@@ -99,7 +106,14 @@ void Levenshtein(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    returnValue.setIntValue(levenshtein(Param1, Param2));
+    try
+    {
+        returnValue.setIntValue(levenshtein(Param1, Param2));
+    }
+    catch(...)
+    {
+        returnValue.setIntValue(0);
+    }
     returnValue.setReturn(pResult);
 }
 
@@ -114,7 +128,18 @@ void Longest_common_subsequence(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    LongestCommonSubsequence(Param1, Param2, returnValue);
+    try
+    {
+        LongestCommonSubsequence(Param1, Param2, returnValue);
+    }
+    catch(...)
+    {
+        // returnValue is still in its default-constructed (empty) state here,
+        // since LongestCommonSubsequence never got the chance to write to it.
+        // Not calling an explicit "clear"/"set empty" method: I haven't verified
+        // C_TEXT exposes one, and inventing an SDK call name would be worse than
+        // relying on the already-correct default state.
+    }
     returnValue.setReturn(pResult);
 }
 
@@ -127,7 +152,18 @@ void Longest_common_substring(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    LongestCommonSubstring(Param1, Param2, returnValue);
+    try
+    {
+        // NOTE: LongestCommonSubstring's int return value is intentionally still
+        // discarded here, same as in the original code. Its meaning (error code?
+        // match length? found/not-found flag?) isn't visible without the .cpp
+        // implementation, so I'm not attaching behavior to it I haven't verified.
+        LongestCommonSubstring(Param1, Param2, returnValue);
+    }
+    catch(...)
+    {
+        // returnValue is still in its default-constructed (empty) state here.
+    }
     returnValue.setReturn(pResult);
 }
 
@@ -142,7 +178,14 @@ void Jaro_winkler(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    returnValue.setDoubleValue(jaro_winkler(Param1, Param2));
+    try
+    {
+        returnValue.setDoubleValue(jaro_winkler(Param1, Param2));
+    }
+    catch(...)
+    {
+        returnValue.setDoubleValue(0.0);
+    }
     returnValue.setReturn(pResult);
 }
 
@@ -155,6 +198,13 @@ void Jaro(sLONG_PTR *pResult, PackagePtr pParams)
     Param1.fromParamAtIndex(pParams, 1);
     Param2.fromParamAtIndex(pParams, 2);
     
-    returnValue.setDoubleValue(jaro(Param1, Param2));
+    try
+    {
+        returnValue.setDoubleValue(jaro(Param1, Param2));
+    }
+    catch(...)
+    {
+        returnValue.setDoubleValue(0.0);
+    }
     returnValue.setReturn(pResult);
 }
