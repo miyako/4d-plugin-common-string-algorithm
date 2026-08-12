@@ -7,6 +7,7 @@
 # Run it manually from the Actions tab whenever you're ready to cut a release.
 
 name: Bump version
+
 on:
   workflow_dispatch:
     inputs:
