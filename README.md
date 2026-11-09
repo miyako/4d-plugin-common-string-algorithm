@@ -5,6 +5,98 @@
 
 # 4d-plugin-common-string-algorithm
 
+## Manual source-version release workflow
+
+Run **Bump version** manually on an explicitly selected branch, choosing `patch`,
+`minor`, or `major`. It checks out the immutable dispatch `github.sha`, validates
+source metadata, commits only the applicable source version literals, and pushes
+one non-force branch update. It creates no tag, dispatches no build, and requires
+a clean checkout and an unchanged remote branch. The mandatory executable
+`.github/scripts/bump-hooks/pre-push` is checked initially and immediately before
+push; its advertised old SHA must equal the selected SHA, its literal new SHA
+must equal HEAD, and that commit must have exactly the selected SHA as its single
+parent. Missing guards, branch advance/rewind/deletion, same-result races and
+extra updates fail closed. Follow-tags is disabled even if enabled in Git config.
+
+Run **Build** separately on the desired source commit (no inputs). It checks out
+that exact `github.sha` in every job and derives `vX.Y.Z`,
+`Common String Algorithm-X.Y.Z.zip` and `Common String Algorithm-X.Y.Z.dmg` from
+validated source metadata. No default-branch-only restriction is imposed.
+Publication uses one repository-wide concurrency group across branches, without
+cancelling a running publication. Before native work, and again after all native,
+signature verification, notarization acceptance and DMG stapling gates, it
+requires both an absent remote tag and an absent draft/published release.
+Authenticated release-list pages are validated through the last page; network,
+authorization, 404, malformed responses and later-page errors are failures, not
+evidence of availability.
+
+Publication is create-only: POST a new tag ref at the selected SHA, verify that
+exact remote SHA, POST a new public/non-prerelease release with the original empty
+notes, then POST assets only to the newly returned release ID. There is no
+reuse, update, delete, clobber, retry or rollback. **If publication stops, any tag,
+release and earlier uploaded assets remain.** Do not rerun expecting to resume:
+inspect the Actions error and the actual remote tag, release ID and asset state.
+After deliberate human review, resolve partial state manually outside these
+workflows, or bump to a new source version and start a new Build. These workflows
+never perform destructive recovery.
+
+### Source authority and preserved native settings
+
+The original bump header explicitly selected `MARKETING_VERSION` when present,
+with `CURRENT_PROJECT_VERSION` only a fallback for older unsplit projects; its
+implementation did the same. Accordingly the three marketing settings are the
+strict release authority, currently **1.0.6**. The three independent current
+settings remain **1.0.0**. Unlike a coordinated-key project, independent valid
+current metadata is validated separately and never incremented or normalized.
+
+Xcode actually copies root `Info.plist` (`INFOPLIST_FILE`) and
+`English.lproj/InfoPlist.strings` (Resources phase). Root `CFBundleVersion` last
+changed from `2.0` to `2.1` in historical commit
+`06fb934eebb03eeb48e4bc4b897771653d651d0f` (2019), alongside the old display
+strings. The later explicit marketing-first workflow never coordinated that
+build field. Its valid independent **2.1** remains unchanged; root
+`CFBundleShortVersionString` remains absent. Only the two actual localized
+release-display overrides are repaired from stale `2.1` to existing marketing
+**1.0.6**, without a release increment. Copyright 2019, CR-only line endings,
+the original lack of BOM, modes and unrelated bytes are preserved.
+
+Future bumps update marketing and the localized display strings together, plus
+an existing literal source short version if supplied. Supported variable
+references and absent keys are preserved. Inconsistent/invalid versions,
+duplicate quoted/unquoted assignments and duplicate plist keys are rejected.
+Independent current/build metadata, prebuilt bundles, 4D data/schema, localization
+revision counters, manifests, dependencies and native project settings are not
+rewritten.
+
+Windows retains Release/x64, the existing v143/Windows SDK 10.0 command-line
+overrides and artifact merge. Its configured MSBuild `.4dbase` x64 output is now
+cleared before compilation and consumed by exact path rather than recursively
+finding a possibly committed prebuilt binary; canonical packaging remains under
+`test/Plugins`. macOS retains the existing Default configuration, universal
+arm64/x86_64 flags, workflow deployment target 11.0, frameworks/resources,
+signing, verification, ZIP/DMG, notarization, stapling and all six secret names.
+Both notary responses must explicitly report `Accepted` (a successful tool exit
+alone is insufficient). No native build, signing, notarization or 4D execution
+was performed as part of this migration; hosted native toolchain compatibility
+is not established by source/lifecycle checks.
+
+Helpers/tests adapt immutable prior art: proxy
+`4dc9995e5523f86f4d6d4d111f89ad3f81d8fb87`, mapm
+`739178b4b8629bb03fc716fd0872355c1b758666`, apple-speech-recognizer
+`7b06cdc0657547234d67e7bb1a5756881cd2b353`, mail-applescript
+`6c8c10ecb82618b60acb3ff1ae6df3f2cf824a6f` (duplicate-assignment checks),
+and jsmin `fb9087a70130bce570c1cf2c687e09ee931ae3e8`
+(explicit marketing-first/separate-build contract). Native settings are this
+project's own, not copied from those projects.
+
+Local source/lifecycle checks (no native execution):
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s .github/tests -v
+actionlint .github/workflows/*.yml
+sh -n .github/scripts/bump-hooks/pre-push
+```
+
 This plugin adds six native 4D commands for comparing pairs of strings: Dice's coefficient, Levenshtein distance, longest common subsequence, longest common substring, and Jaro/Jaro-Winkler similarity. Every command is a pure in-memory string computation — none of them touch the file system, network, or any OS-level graphics/permission API — and each takes exactly two `Text` parameters and returns a single `Real`, `Longint`, or `Text` result.
 
 | Command | Returns | Purpose |
