@@ -5,6 +5,116 @@
 
 # 4d-plugin-common-string-algorithm
 
+## Native ownership maintenance
+
+The bounded audit baseline is `5df0dc6d65504e66fc9c357e4f30af4d9a4fd65a`.
+Both root and committed-bundle `manifest.json` files declare the same six
+two-Text commands, in the order dispatched by `PluginMain` ->
+`CommandDispatcher` (selectors 1-6). Neither declares an array parameter;
+`&Y` metadata would indicate array capability, not ownership.
+
+The inventory includes all 22 tracked native implementation files, 27 headers,
+the prefix header and export definition, not just exported-command matches:
+
+| Surface | Reachability and ownership |
+|---|---|
+| `4DPlugin.cpp/.h` | Six scalar entry points copy borrowed input text into `C_TEXT`; the two Text results use the content setter, not descriptor transfer. |
+| `dice`, `lcs`, `jaro_winkler`, `levenshtein` (`.c/.h`) | Algorithm boundaries use copied C++ strings and wrapper results. Third-party algorithm implementations are unchanged. |
+| `Classes/C_TEXT.cpp/.h`, `ARRAY_TEXT.cpp/.h` | Own C++ string copies; array output creates an independent descriptor per element and leaves accepted transfers with the array. No immediate post-transfer disposal was found. |
+| `Classes/C_PICTURE.cpp/.h` | Compiled but dormant from these six commands. Fixed the path descriptor's double disposal, initial empty-string/picture overwrites, missing temporary/argument picture releases, and conversion byte-count overread. |
+| `Classes/C_POINTER.cpp/.h` | Compiled but dormant; metadata/value interpretation is deferred, not blindly cleared. |
+| `Classes/C_BLOB.cpp/.h` | Compiled but dormant; owns copied bytes and transfers newly allocated output handles. No string descriptor assignment. |
+| `Classes/C_DATE`, `C_INTEGER`, `C_LONGINT`, `C_REAL`, `C_TIME` (`.cpp/.h`) | Scalar value wrappers, with no string descriptor ownership. |
+| `Classes/ARRAY_BOOLEAN`, `ARRAY_DATE`, `ARRAY_INTEGER`, `ARRAY_LONGINT`, `ARRAY_REAL`, `ARRAY_TIME` (`.cpp/.h`) | C++ value arrays and scalar SDK setters; no string descriptor ownership. |
+| `Classes/C_TYPES.h`, `4D Plugin_Prefix.pch` | Shared types/platform imports and Carbon prefix. |
+| `4DPluginAPI.c/.h`, `EntryPoints.h`, `Flags.h`, `PrivateTypes.h`, `PublicTypes.h`, `4DPluginAPI.def` | Bundled SDK/ABI boundary, inspected and unchanged; `FourDPackex` calls `PluginMain`. |
+
+The Xcode Sources phase and current `Common String Algorithm.vcxproj` compile
+all 22 implementations, including all 16 wrapper implementations; Windows uses
+the bundled SDK and Classes include directories. The legacy
+`Common String Algorithm.vc10.vcxproj` also compiles all wrappers and the entry
+point/SDK, but omits the four algorithm implementations. The API header includes
+all wrapper headers; none of these dormant helpers is excluded by a manifest.
+
+### Bundled contracts and fixes
+
+The SDK implementation last changed in repository commit
+`62b138f57b9f66f997aa38cdd5a4a692d87e94e6` (`2.0`).
+Its Git blob is `29788ed041effaf67269ccd93f971e8aee2ce5f8`;
+the API header blob is `9054b45ffc7ff6f5b8d57529a3788a55d977b314`.
+The implementation's `v14` and header's `v13` comments are **not verified
+upstream release identities**. Guidance was checked against
+`miyako/skills` commit `e6b492fcb81e5e1a7f7db723594b420e63bf6eb9`,
+including merged ownership-guidance PRs 69 and 71.
+
+In this SDK, `PA_SetStringInArray` disposes the old element and shallow-transfers
+the incoming descriptor only for Unicode arrays with non-null data, indices
+from zero through the element count, and a non-null descriptor pointer.
+Rejected assignments retain caller ownership. `PA_GetStringInArray` is borrowed:
+copy before replacing, shrinking or clearing its owner. Accepted independent
+outputs must not share an allocation.
+
+`PA_SetStringVariable` and `PA_SetPictureVariable` also shallow-assign, without
+clearing overwritten content. `PA_CreateVariable(Unistring/Picture)` may already
+own an allocated empty value. Picture arguments immediately assigned by the
+wrapper now start Undefined. The path descriptor has exactly one owner,
+`args[0]`, cleared once after synchronous execution. `setPicture` retains;
+`fromFileAtPath` therefore clears its picture argument after retaining, and
+`setBytes` releases its temporary created picture after retaining.
+Returned copies/thumbnails still hand an owning picture reference to the caller.
+`createCopy` converts the charset converter's returned byte length to UTF-16
+code units before constructing a string. `PA_ReturnString`/`PA_SetUnistring`
+use an engine content setter and must not be treated as array transfers.
+
+### Unsigned regression
+
+On macOS with the existing Apple toolchain:
+
+```sh
+python3 tests/native/run.py --baseline
+```
+
+This directly compiles the actual entry point, all algorithms/wrappers and
+**the full unchanged bundled SDK** as Objective-C++, with ASan/UBSan and an
+engine-boundary callback shim. It never invokes Xcode project phases. The same
+harness is also linked against native sources extracted from the immutable
+baseline. Baseline `file` fails for double string disposal, `copy` for an ASan
+heap-buffer-overread, and `bytes`, `gray`, `size`, `thumbnail` for unbalanced
+picture references; all eight fixed cases pass. `arrays` and `dispatch` pass
+on both revisions.
+
+Fixtures assert exact ASCII, BMP, supplementary surrogate-pair and empty text;
+null and allocated empty descriptors; byte capacities, code-unit counts and
+termination; borrowed-copy survival after mutation/churn; independent accepted
+array transfers, replacement, shrink, clear and type/index/data/null-descriptor
+rejections; synchronous scalar cleanup independence; and picture handoff
+survival with unchanged/replaced command arguments. Explicit allocation, handle
+and picture-reference balances cover leaks because macOS LSan is not used.
+The existing 54 source/lifecycle tests also pass; release behavior is unchanged.
+
+### Deferred boundaries
+
+`C_POINTER::getVariable` consumes variable-definition metadata from
+`PA_GetPointerValue`, whose header calls for clearing returned values, but whose
+engine representation is not established here. Clearing it as an ordinary
+value, or clearing then relabeling it borrowed, is not justified. SDK
+application-path and successful picture-data output ownership is also
+undocumented locally; no guessed disposal was added. The shim uses no picture
+representations and does not certify those outputs.
+
+This older SDK and the first-party code contain no object-property/collection
+getter callsites or JSON Parse callbacks. The picture command callsites are
+procedures; general owning method/command return values must still be cleared
+by their consumers. Normal-array checks do not certify the SDK's resize
+allocation-failure count behavior. OOM handling, unrelated algorithm hardening
+and wrapper redesign remain out of scope.
+
+There was no real 4D or Windows host execution, and this is not reproduction or
+certification of the reported Windows Poppler crash. Both Actions workflows
+remain manual-only. The Xcode project contains a signing/packaging shell phase,
+so no project build, signing, notarization, packaging, release dispatch, tag or
+binary publication is part of this validation.
+
 ## Manual source-version release workflow
 
 Run **Bump version** manually on an explicitly selected branch, choosing `patch`,
